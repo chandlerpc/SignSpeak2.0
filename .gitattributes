@@ -1,0 +1,2 @@
+# Large training data files are excluded via .gitignore
+# Only track specific large files with LFS if needed in the future

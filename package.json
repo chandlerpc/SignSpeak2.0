@@ -1,0 +1,27 @@
+{
+  "name": "sign-speak",
+  "version": "1.0.0",
+  "description": "Real-Time ASL Finger-Spelling Translator Web Application",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "model-server": "cd ml && py model_server.py",
+    "train": "cd ml && py retrain_from_json.py"
+  },
+  "dependencies": {
+    "@mediapipe/camera_utils": "^0.3.1675466862",
+    "@mediapipe/hands": "^0.4.1675469240",
+    "@tensorflow/tfjs": "3.21.0",
+    "chart.js": "^4.4.1",
+    "idb": "^8.0.0",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.12"
+  }
+}
