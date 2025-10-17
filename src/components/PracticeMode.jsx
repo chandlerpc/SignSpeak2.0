@@ -13,6 +13,7 @@ const PracticeMode = () => {
   const [feedback, setFeedback] = useState('')
   const [practiceHistory, setPracticeHistory] = useState([])
   const [isProcessing, setIsProcessing] = useState(false)
+  const [showCheatSheet, setShowCheatSheet] = useState(false)
   const lastPredictionTime = useRef(0)
 
   useEffect(() => {
@@ -272,6 +273,9 @@ const PracticeMode = () => {
             <button className="practice-btn skip" onClick={generateRandomLetter}>
               Skip Letter
             </button>
+            <button className="practice-btn cheat-sheet" onClick={() => setShowCheatSheet(!showCheatSheet)}>
+              {showCheatSheet ? 'Hide' : 'Show'} Cheat Sheet
+            </button>
             <button className="practice-btn reset" onClick={resetPractice}>
               Reset Practice
             </button>
@@ -292,6 +296,17 @@ const PracticeMode = () => {
               ))}
             </div>
           </div>
+
+          {showCheatSheet && (
+            <div className="cheat-sheet">
+              <h4>ASL Alphabet Reference</h4>
+              <img
+                src="/ASL-Alphabet-poster-flashcards-683x1024.png"
+                alt="ASL Alphabet Reference"
+                className="cheat-sheet-image"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
