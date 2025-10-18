@@ -15,7 +15,6 @@ const PracticeMode = () => {
   const [isProcessing, setIsProcessing] = useState(false)
   const [showCheatSheet, setShowCheatSheet] = useState(false)
   const lastPredictionTime = useRef(0)
-
   useEffect(() => {
     initializeCamera()
     generateRandomLetter()
