@@ -14,6 +14,7 @@ function App() {
   const [recognizedLetters, setRecognizedLetters] = useState([])
   const [currentWord, setCurrentWord] = useState('')
   const [confidence, setConfidence] = useState(0)
+  const [practiceStats, setPracticeStats] = useState(null)
 
   const handleLetterRecognized = (letter, conf) => {
     setRecognizedLetters(prev => [...prev, { letter, confidence: conf, timestamp: Date.now() }])
@@ -28,6 +29,10 @@ function App() {
 
   const addSpace = () => {
     setCurrentWord(prev => prev + ' ')
+  }
+
+  const handlePracticeStatsUpdate = (stats) => {
+    setPracticeStats(stats)
   }
 
   return (
@@ -78,7 +83,7 @@ function App() {
           </div>
         ) : mode === 'practice' ? (
           <Suspense fallback={<div className="loading">Loading Practice Mode...</div>}>
-            <PracticeMode />
+            <PracticeMode onStatsUpdate={handlePracticeStatsUpdate} />
           </Suspense>
         ) : (
           <Suspense fallback={<div className="loading">Loading Data Collector...</div>}>
@@ -89,7 +94,11 @@ function App() {
         {mode !== 'collect' && (
           <div className="side-panel">
             <Suspense fallback={<div className="loading">Loading...</div>}>
-              <Analytics recognizedLetters={recognizedLetters} />
+              <Analytics
+                recognizedLetters={recognizedLetters}
+                practiceStats={practiceStats}
+                mode={mode}
+              />
               <SavedPhrases />
             </Suspense>
           </div>

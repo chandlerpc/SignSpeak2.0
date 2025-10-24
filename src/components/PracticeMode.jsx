@@ -3,7 +3,7 @@ import { Hands } from '@mediapipe/hands'
 import { Camera } from '@mediapipe/camera_utils'
 import './PracticeMode.css'
 
-const PracticeMode = () => {
+const PracticeMode = ({ onStatsUpdate }) => {
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
   const [targetLetter, setTargetLetter] = useState('A')
@@ -26,10 +26,36 @@ const PracticeMode = () => {
   useEffect(() => {
     isTrackingEnabledRef.current = isTrackingEnabled
   }, [isTrackingEnabled])
+
   useEffect(() => {
     initializeCamera()
     generateRandomLetter()
   }, [])
+
+  // Update parent with practice stats
+  useEffect(() => {
+    if (onStatsUpdate) {
+      const accuracy = totalAttempts > 0 ? ((score / totalAttempts) * 100).toFixed(1) : 0
+      const avgConfidence = practiceHistory.length > 0
+        ? practiceHistory.reduce((sum, item) => sum + item.confidence, 0) / practiceHistory.length
+        : 0
+
+      onStatsUpdate({
+        score,
+        totalAttempts,
+        accuracy,
+        avgConfidence,
+        practiceHistory,
+        handlers: {
+          checkAnswer,
+          skipLetter: generateRandomLetter,
+          toggleCheatSheet: () => setShowCheatSheet(!showCheatSheet),
+          resetPractice,
+          showCheatSheet
+        }
+      })
+    }
+  }, [score, totalAttempts, practiceHistory, showCheatSheet, onStatsUpdate])
 
   const initializeCamera = async () => {
     try {
@@ -252,20 +278,6 @@ const PracticeMode = () => {
 
   return (
     <div className="practice-mode">
-      <div className="practice-header">
-        <h2>Practice Mode</h2>
-        <div className="practice-stats">
-          <div className="stat-item">
-            <span className="stat-label">Score:</span>
-            <span className="stat-value">{score}/{totalAttempts}</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-label">Accuracy:</span>
-            <span className="stat-value">{accuracy}%</span>
-          </div>
-        </div>
-      </div>
-
       <div className="practice-content">
         <div className="practice-camera">
           <div className="camera-header">
@@ -300,36 +312,21 @@ const PracticeMode = () => {
             <div className="target-letter">{targetLetter}</div>
           </div>
 
-          {userAttempt && (
-            <div className="attempt-display">
-              <h4>Your Sign:</h4>
-              <div className="attempt-letter">{userAttempt.letter}</div>
+          <div className="attempt-display">
+            <h4>Your Sign:</h4>
+            <div className="attempt-letter">{userAttempt ? userAttempt.letter : 'No Sign'}</div>
+            {userAttempt && (
               <div className="attempt-confidence">
                 Confidence: {(userAttempt.confidence * 100).toFixed(0)}%
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {feedback && (
             <div className={`feedback ${feedback.includes('Correct') ? 'success' : 'error'}`}>
               {feedback}
             </div>
           )}
-
-          <div className="practice-controls">
-            <button className="practice-btn check" onClick={checkAnswer}>
-              Check Answer
-            </button>
-            <button className="practice-btn skip" onClick={generateRandomLetter}>
-              Skip Letter
-            </button>
-            <button className="practice-btn cheat-sheet" onClick={() => setShowCheatSheet(!showCheatSheet)}>
-              {showCheatSheet ? 'Hide' : 'Show'} Cheat Sheet
-            </button>
-            <button className="practice-btn reset" onClick={resetPractice}>
-              Reset Practice
-            </button>
-          </div>
 
           <div className="recent-attempts">
             <h4>Recent Attempts</h4>

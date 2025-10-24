@@ -117,6 +117,7 @@
   max-width: 1920px;
   margin: 0 auto;
   width: 100%;
+  align-items: start;
 }
 
 .translate-mode {
@@ -164,6 +165,9 @@
 .side-panel > div:first-child {
   grid-column: 2;
   grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .side-panel > div:last-child {

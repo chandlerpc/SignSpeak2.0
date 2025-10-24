@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  height: 100%;
+  overflow-y: hidden;
 }
 
 .analytics h3 {
@@ -86,4 +88,86 @@
   font-weight: 600;
   color: #666;
   font-size: 0.9rem;
+}
+
+.practice-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.practice-btn {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.practice-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.5s, height 0.5s;
+}
+
+.practice-btn:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+.practice-btn.check {
+  background: linear-gradient(135deg, #667eea, #4c51bf);
+  color: white;
+}
+
+.practice-btn.check:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+}
+
+.practice-btn.skip {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+}
+
+.practice-btn.skip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+}
+
+.practice-btn.cheat-sheet {
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  color: white;
+}
+
+.practice-btn.cheat-sheet:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+}
+
+.practice-btn.reset {
+  background: #f3f4f6;
+  color: #374151;
+  border: 2px solid #d1d5db;
+}
+
+.practice-btn.reset:hover {
+  background: #e5e7eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }

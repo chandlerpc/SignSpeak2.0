@@ -22,12 +22,22 @@ ChartJS.register(
   Legend
 )
 
-const Analytics = ({ recognizedLetters }) => {
+const Analytics = ({ recognizedLetters, practiceStats, mode }) => {
   const [analyticsData, setAnalyticsData] = useState({
     avgConfidence: 0,
     totalLetters: 0,
     accuracyTrend: []
   })
+
+  // Use practice stats if in practice mode
+  const isPracticeMode = mode === 'practice'
+  const displayStats = isPracticeMode && practiceStats ? {
+    avgConfidence: practiceStats.avgConfidence,
+    totalLetters: practiceStats.totalAttempts,
+    score: practiceStats.score,
+    accuracy: practiceStats.accuracy,
+    handlers: practiceStats.handlers
+  } : null
 
   useEffect(() => {
     if (recognizedLetters.length > 0) {
@@ -115,15 +125,53 @@ const Analytics = ({ recognizedLetters }) => {
       <div className="analytics-summary">
         <div className="summary-card">
           <span className="summary-label">Total Letters</span>
-          <span className="summary-value">{analyticsData.totalLetters}</span>
+          <span className="summary-value">
+            {displayStats ? displayStats.totalLetters : analyticsData.totalLetters}
+          </span>
         </div>
         <div className="summary-card">
           <span className="summary-label">Avg Confidence</span>
           <span className="summary-value">
-            {(analyticsData.avgConfidence * 100).toFixed(1)}%
+            {displayStats
+              ? `${(displayStats.avgConfidence * 100).toFixed(1)}%`
+              : `${(analyticsData.avgConfidence * 100).toFixed(1)}%`
+            }
           </span>
         </div>
+        {displayStats && (
+          <>
+            <div className="summary-card">
+              <span className="summary-label">Score</span>
+              <span className="summary-value">
+                {displayStats.score}/{displayStats.totalLetters}
+              </span>
+            </div>
+            <div className="summary-card">
+              <span className="summary-label">Accuracy</span>
+              <span className="summary-value">
+                {displayStats.accuracy}%
+              </span>
+            </div>
+          </>
+        )}
       </div>
+
+      {displayStats && displayStats.handlers && (
+        <div className="practice-controls">
+          <button className="practice-btn check" onClick={displayStats.handlers.checkAnswer}>
+            Check Answer
+          </button>
+          <button className="practice-btn skip" onClick={displayStats.handlers.skipLetter}>
+            Skip Letter
+          </button>
+          <button className="practice-btn cheat-sheet" onClick={displayStats.handlers.toggleCheatSheet}>
+            {displayStats.handlers.showCheatSheet ? 'Hide' : 'Show'} Cheat Sheet
+          </button>
+          <button className="practice-btn reset" onClick={displayStats.handlers.resetPractice}>
+            Reset Practice
+          </button>
+        </div>
+      )}
 
       {analyticsData.accuracyTrend.length > 0 && (
         <div className="chart-container">

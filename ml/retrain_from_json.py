@@ -46,7 +46,6 @@ def load_json_data(json_path):
     class_names = sorted(data.keys())  # Alphabetical order
 
     print(f"Found {len(class_names)} classes: {class_names}")
-
     for class_idx, letter in enumerate(class_names):
         print(f"Processing {letter}: {len(data[letter])} images...")
         for base64_img in data[letter]:
