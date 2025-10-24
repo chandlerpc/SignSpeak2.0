@@ -111,6 +111,7 @@
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 380px;
+  grid-template-rows: auto auto;
   gap: 2rem;
   padding: 2rem;
   max-width: 1920px;
@@ -120,12 +121,37 @@
 
 .translate-mode {
   display: grid;
-  grid-template-rows: 2fr 1fr;
+  grid-template-columns: 1.5fr 1fr;
   gap: 2rem;
+  height: 100%;
 }
 
-.camera-section,
-.output-section,
+.camera-section {
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.output-section {
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.side-panel {
+  display: contents;
+}
+
 .side-panel > div {
   background: var(--bg-primary);
   border-radius: var(--radius-lg);
@@ -135,17 +161,21 @@
   transition: all 0.3s ease;
 }
 
+.side-panel > div:first-child {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.side-panel > div:last-child {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+
 .camera-section:hover,
 .output-section:hover,
 .side-panel > div:hover {
   box-shadow: var(--shadow-xl);
   transform: translateY(-2px);
-}
-
-.side-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
 }
 
 @media (max-width: 1200px) {

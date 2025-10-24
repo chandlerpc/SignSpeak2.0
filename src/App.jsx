@@ -23,6 +23,7 @@ function App() {
 
   const clearWord = () => {
     setCurrentWord('')
+    setRecognizedLetters([])
   }
 
   const addSpace = () => {
