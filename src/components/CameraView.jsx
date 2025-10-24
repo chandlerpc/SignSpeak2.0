@@ -7,10 +7,17 @@ const CameraView = ({ onLetterRecognized }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isDetecting, setIsDetecting] = useState(false);
+  const [isTrackingEnabled, setIsTrackingEnabled] = useState(false);
+  const isTrackingEnabledRef = useRef(false);
   const [fps, setFps] = useState(0);
   const lastFrameTime = useRef(Date.now());
   const frameCount = useRef(0);
   const lastPredictionTime = useRef(0);
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    isTrackingEnabledRef.current = isTrackingEnabled;
+  }, [isTrackingEnabled]);
 
   useEffect(() => {
     let mounted = true;
@@ -80,8 +87,10 @@ const CameraView = ({ onLetterRecognized }) => {
       // Draw hand landmarks
       drawHandLandmarks(ctx, landmarks, canvas.width, canvas.height);
 
-      // Get prediction from Flask API (pass canvas for extraction)
-      await classifyHand(canvas, landmarks, canvas.width, canvas.height);
+      // Get prediction from Flask API only if tracking is enabled
+      if (isTrackingEnabledRef.current) {
+        await classifyHand(canvas, landmarks, canvas.width, canvas.height);
+      }
     } else {
       setIsDetecting(false);
     }
@@ -240,6 +249,14 @@ const CameraView = ({ onLetterRecognized }) => {
     <div className="camera-view">
       <div className="camera-header">
         <h2>Camera Feed</h2>
+        <div className="camera-controls">
+          <button
+            className={`tracking-toggle ${isTrackingEnabled ? 'active' : ''}`}
+            onClick={() => setIsTrackingEnabled(!isTrackingEnabled)}
+          >
+            {isTrackingEnabled ? '⏸ Pause Tracking' : '▶ Start Tracking'}
+          </button>
+        </div>
       </div>
 
       <div className="camera-container">

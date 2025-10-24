@@ -16,6 +16,11 @@
   font-size: 1.5rem;
 }
 
+.camera-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .camera-controls button {
   padding: 0.5rem 1rem;
   background: white;
@@ -36,11 +41,36 @@
   color: white;
 }
 
+.tracking-toggle {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.tracking-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.tracking-toggle.active {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.tracking-toggle.active:hover {
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
 .camera-container {
   position: relative;
   flex: 1;
-  background: #000;
-  border-radius: 10px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -139,11 +169,6 @@
 .fps-counter {
   font-weight: 600;
   color: #667eea;
-}
-
-.camera-controls {
-  display: flex;
-  gap: 0.5rem;
 }
 
 .debug-panel {

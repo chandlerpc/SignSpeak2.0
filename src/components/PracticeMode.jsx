@@ -14,7 +14,18 @@ const PracticeMode = () => {
   const [practiceHistory, setPracticeHistory] = useState([])
   const [isProcessing, setIsProcessing] = useState(false)
   const [showCheatSheet, setShowCheatSheet] = useState(false)
+  const [isTrackingEnabled, setIsTrackingEnabled] = useState(false)
+  const isTrackingEnabledRef = useRef(false)
+  const [isDetecting, setIsDetecting] = useState(false)
+  const [fps, setFps] = useState(0)
+  const lastFrameTime = useRef(Date.now())
+  const frameCount = useRef(0)
   const lastPredictionTime = useRef(0)
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    isTrackingEnabledRef.current = isTrackingEnabled
+  }, [isTrackingEnabled])
   useEffect(() => {
     initializeCamera()
     generateRandomLetter()
@@ -64,18 +75,36 @@ const PracticeMode = () => {
     ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height)
 
     if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+      setIsDetecting(true)
       const landmarks = results.multiHandLandmarks[0]
       drawHandLandmarks(ctx, landmarks, canvas.width, canvas.height)
 
-      // Throttle predictions to every 1 second
-      const now = Date.now()
-      if (now - lastPredictionTime.current > 1000 && !isProcessing) {
-        lastPredictionTime.current = now
-        await classifyAndCheck(landmarks, canvas.width, canvas.height, ctx)
+      // Throttle predictions to every 1 second, only if tracking is enabled
+      if (isTrackingEnabledRef.current) {
+        const now = Date.now()
+        if (now - lastPredictionTime.current > 1000 && !isProcessing) {
+          lastPredictionTime.current = now
+          await classifyAndCheck(landmarks, canvas.width, canvas.height, ctx)
+        }
       }
+    } else {
+      setIsDetecting(false)
     }
 
     ctx.restore()
+    updateFPS()
+  }
+
+  const updateFPS = () => {
+    frameCount.current++
+    const now = Date.now()
+    const elapsed = now - lastFrameTime.current
+
+    if (elapsed >= 1000) {
+      setFps(frameCount.current)
+      frameCount.current = 0
+      lastFrameTime.current = now
+    }
   }
 
   const drawHandLandmarks = (ctx, landmarks, width, height) => {
@@ -239,8 +268,30 @@ const PracticeMode = () => {
 
       <div className="practice-content">
         <div className="practice-camera">
-          <video ref={videoRef} style={{ display: 'none' }} />
-          <canvas ref={canvasRef} className="practice-canvas" />
+          <div className="camera-header">
+            <h2>Camera Feed</h2>
+            <div className="camera-controls">
+              <button
+                className={`tracking-toggle ${isTrackingEnabled ? 'active' : ''}`}
+                onClick={() => setIsTrackingEnabled(!isTrackingEnabled)}
+              >
+                {isTrackingEnabled ? '⏸ Pause Tracking' : '▶ Start Tracking'}
+              </button>
+            </div>
+          </div>
+          <div className="camera-container">
+            <video ref={videoRef} style={{ display: 'none' }} />
+            <canvas ref={canvasRef} className="practice-canvas" />
+          </div>
+          <div className="camera-status">
+            <div className={`status-indicator ${isDetecting ? 'detected' : ''}`}>
+              <span className="status-dot"></span>
+              {isDetecting ? 'Hand Detected' : 'No Hand Detected'}
+            </div>
+            <div className="fps-counter">
+              FPS: {fps}
+            </div>
+          </div>
         </div>
 
         <div className="practice-panel">
