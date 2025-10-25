@@ -63,7 +63,7 @@ function App() {
         </button>
       </nav>
 
-      <main className="app-main">
+      <main className={`app-main ${mode === 'collect' ? 'collect-mode' : ''}`}>
         {mode === 'translate' ? (
           <div className="translate-mode">
             <div className="camera-section">

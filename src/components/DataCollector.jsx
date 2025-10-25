@@ -254,16 +254,6 @@ const DataCollector = () => {
 
   return (
     <div className="data-collector">
-      <div className="collector-header">
-        <h2>📸 Training Data Collector</h2>
-        <p>Capture {SAMPLES_PER_LETTER} samples of each letter</p>
-        {capturedImages.length > 0 && (
-          <p style={{ color: '#f57c00', fontWeight: 'bold' }}>
-            ⚠️ {capturedImages.length} images in memory - Download regularly to avoid losing data!
-          </p>
-        )}
-      </div>
-
       {loadingError && (
         <div style={{
           background: '#fff3cd',
@@ -287,7 +277,7 @@ const DataCollector = () => {
           <canvas ref={canvasRef} className="collector-canvas" />
         </div>
 
-        <div className="control-panel">
+        <div className="middle-panel">
           <div className="letter-selector">
             <button onClick={previousLetter} disabled={LETTERS.indexOf(currentLetter) === 0}>
               ← Prev
@@ -345,6 +335,22 @@ const DataCollector = () => {
               🗑️ Clear All
             </button>
           </div>
+        </div>
+
+        <div className="right-panel">
+          <div className="instructions">
+            <h3>Instructions</h3>
+            <ol>
+              <li>Position your hand to form letter "{currentLetter}"</li>
+              <li><strong>Manual:</strong> Click "Capture" or press SPACE</li>
+              <li><strong>Auto:</strong> Start Auto Capture for continuous capture</li>
+              <li>Adjust interval (100-2000ms) before starting auto capture</li>
+              <li>Capture {SAMPLES_PER_LETTER} samples with slight variations</li>
+              <li>Use ← Prev / Next → to navigate letters</li>
+              <li>⚠️ Auto-downloads every 100 images</li>
+              <li>Download when done and retrain the model</li>
+            </ol>
+          </div>
 
           <div className="progress-grid">
             <h3>Progress</h3>
@@ -359,20 +365,6 @@ const DataCollector = () => {
                 </div>
               ))}
             </div>
-          </div>
-
-          <div className="instructions">
-            <h3>Instructions</h3>
-            <ol>
-              <li>Position your hand to form letter "{currentLetter}"</li>
-              <li><strong>Manual:</strong> Click "Capture" or press SPACE</li>
-              <li><strong>Auto:</strong> Start Auto Capture for continuous capture</li>
-              <li>Adjust interval (100-2000ms) before starting auto capture</li>
-              <li>Capture {SAMPLES_PER_LETTER} samples with slight variations</li>
-              <li>Use ← Prev / Next → to navigate letters</li>
-              <li>⚠️ Auto-downloads every 100 images</li>
-              <li>Download when done and retrain the model</li>
-            </ol>
           </div>
         </div>
       </div>
